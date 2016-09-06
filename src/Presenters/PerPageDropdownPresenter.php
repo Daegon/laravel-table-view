@@ -19,31 +19,11 @@ class PerPageDropdownPresenter
 	/**
      * Returns <option> tag with appropriate value and select attribute for the specified limit amount
      *
-     * @param int $optionTagLimit
      * @return string
      */
-	public static function pageLimitOptions($dataCollectionSize)
+	public static function pageLimitOptions()
 	{
-		$currentLimit = (int) Request::input('limit', 10);
-		$totalOptions = count( self::$pageLimitOptions );
-
-		$htmlSelectOptions = [];
-
-		for ( $i=0; $i<$totalOptions; $i++ )
-		{
-			$pageLimit = self::$pageLimitOptions[$i];
-
-			if ( 
-				$pageLimit <= $dataCollectionSize 
-				|| $pageLimit <= $currentLimit
-				|| ( $i >= 1 && self::$pageLimitOptions[$i-1] < $dataCollectionSize ) 
-			) 
-			{
-				$htmlSelectOptions[] = $pageLimit;
-			}
-		}
-
-		return $htmlSelectOptions;
+		return self::$pageLimitOptions;
 	}
 
 	/**
@@ -64,9 +44,7 @@ class PerPageDropdownPresenter
 
 		$htmlTag = '<option value="' . RoutePresenter::withParam($currentPath, $routeParameters) . '" ';
 
-		$currentLimit = $perPage;
-
-		if ( $optionTagLimit === $currentLimit ) 
+		if ( $optionTagLimit == $perPage )
 		{
 			$htmlTag .= 'selected ';
 		}

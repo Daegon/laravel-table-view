@@ -58,9 +58,7 @@ class LaravelTableViewPresenter
      */
 	public function perPageOptions()
 	{
-		return PerPageDropdownPresenter::pageLimitOptions( 
-			$this->laravelTableView->getPerPage()
-		);
+		return PerPageDropdownPresenter::pageLimitOptions();
 	}
 
 	/**
