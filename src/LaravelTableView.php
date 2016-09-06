@@ -47,7 +47,7 @@ class LaravelTableView
 	/**
 	 * @var int
 	 */
-	private $perPage;
+	private $defaultPerPage;
 
 	/**
      * @var string
@@ -69,9 +69,6 @@ class LaravelTableView
 
 		// sorting
 		$this->sortRepo = new SortRepository;
-
-		// pagination
-		$this->perPage = $this->limitPerPage( $this->path );
 
 		// search
 		$this->searchRepo = new SearchRepository;
@@ -247,7 +244,7 @@ class LaravelTableView
 			$this->searchRepo, 
 			$this->sortRepo, 
 			$this->columns 
-		)->paginate( $this->perPage );
+		)->paginate( $this->getPerPage() );
 
 		$this->collectionSize = $this->dataCollection->total();
 
@@ -262,6 +259,36 @@ class LaravelTableView
 	public function present()
 	{
 		return new LaravelTableViewPresenter($this);
+	}
+
+	/**
+	 * @param $perPage
+	 * @return self
+	 */
+	public function setDefaultPerPage($perPage)
+	{
+		$this->defaultPerPage = $perPage;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getPerPage()
+	{
+		$perPage = $this->defaultPerPage;
+
+		if ( Request::has('limit') )
+		{
+			$perPage = Request::input('limit');
+		}
+		else if ( Cookie::has($this->path . '_perPage') )
+		{
+			$perPage = Cookie::get($this->path . '_perPage');
+		}
+
+		return $perPage;
 	}
 
 	/**
@@ -289,26 +316,6 @@ class LaravelTableView
 		$dataCollection = $sortRepo->addOrder($dataCollection, $tableViewColumns);
 
 		return $dataCollection;
-	}
-
-	/**
-     * @param string $path
-     * @return int
-     */
-	private function limitPerPage( $path )
-	{
-		$perPage = 10;
-
-		if ( Request::has('limit') )
-		{
-			$perPage = Request::input('limit');
-		}
-		else if ( Cookie::has($path . '_perPage') )
-		{
-			$perPage = Cookie::get($path . '_perPage');
-		}
-
-		return $perPage;
 	}
 
 }

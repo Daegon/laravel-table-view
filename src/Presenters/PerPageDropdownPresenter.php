@@ -51,9 +51,10 @@ class PerPageDropdownPresenter
      *
      * @param string $currentPath
      * @param int $optionTagLimit
+     * @param int $perPage
      * @return string
      */
-	public static function optionTag($currentPath, $optionTagLimit)
+	public static function optionTag($currentPath, $optionTagLimit, $perPage)
 	{
 		$routeParameters = array_merge([
 				'page'  => 1,
@@ -63,7 +64,7 @@ class PerPageDropdownPresenter
 
 		$htmlTag = '<option value="' . RoutePresenter::withParam($currentPath, $routeParameters) . '" ';
 
-		$currentLimit = (int) Request::input('limit', 10);
+		$currentLimit = $perPage;
 
 		if ( $optionTagLimit === $currentLimit ) 
 		{

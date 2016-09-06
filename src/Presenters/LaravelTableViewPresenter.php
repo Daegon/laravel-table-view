@@ -59,7 +59,7 @@ class LaravelTableViewPresenter
 	public function perPageOptions()
 	{
 		return PerPageDropdownPresenter::pageLimitOptions( 
-			$this->laravelTableView->dataSize() 
+			$this->laravelTableView->getPerPage()
 		);
 	}
 
@@ -74,7 +74,8 @@ class LaravelTableViewPresenter
 	{
 		return PerPageDropdownPresenter::optionTag(
 			$this->laravelTableView->currentPath(),
-			$optionTagLimit
+			$optionTagLimit,
+			$this->laravelTableView->getPerPage()
 		);
 	}
 
